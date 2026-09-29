@@ -14,7 +14,7 @@ import { getSiteContent } from "@/lib/site";
 export const dynamic = "force-dynamic";
 
 const GALLERY = [
-  { src: "/images/living.png", cap: "Panoramic living rooms", sub: "River view" },
+  { src: "/images/living.png", cap: "Panoramic living rooms", sub: "Sea view" },
   { src: "/images/terrace.png", cap: "Private terraces", sub: "Up to 48 m²" },
   { src: "/images/lobby.png", cap: "Lobby service", sub: "24 / 7" },
 ];
@@ -38,7 +38,7 @@ export default async function Home() {
         src="/videos/duna-reveal-scrub.mp4"
         poster="/images/tower-exterior.png"
         eyebrow="Private residence · Próspera, Roatán"
-        title="Your home in a riverside residence"
+        title="Your home above the Caribbean reef"
         actions={
           <>
             <Link href="#layouts" className="btn-hero btn-hero--ghost">
@@ -132,7 +132,7 @@ export default async function Home() {
               <span style={{ color: "var(--gray-3)", fontSize: "18rem", maxWidth: "40ch", display: "block" }}>
                 Duna Residence is designed for those who value privacy, light and views.
                 Every detail — from the lobby to the fixtures — is chosen to the
-                standards of premium riverside living.
+                standards of premium island living.
               </span>
             </Reveal>
           </div>

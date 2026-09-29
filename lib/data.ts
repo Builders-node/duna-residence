@@ -2,7 +2,7 @@ import { Apartment, PlanType } from "./types";
 
 export const BUILDING = {
   name: "Duna Residence",
-  tagline: "A private riverside residence",
+  tagline: "A private island residence on Roatán",
   address: "Próspera · Roatán, Honduras",
 };
 
@@ -18,11 +18,11 @@ export const TYPES: Apartment[] = [
     terrace: 4.8,
     ceiling: 3.1,
     orientation: "West",
-    view: "Sunset side",
+    view: "Caribbean sunset",
     pricePerM2: 2350,
     available: 8,
     blurb:
-      "A compact, light-filled home with an open living space and a private terrace.",
+      "A compact, light-filled home opening west to the Caribbean — an open living space and a private terrace for the sunset.",
   },
   {
     id: "residence",
@@ -34,11 +34,11 @@ export const TYPES: Apartment[] = [
     terrace: 9.6,
     ceiling: 3.1,
     orientation: "South · East",
-    view: "River & park",
+    view: "Sea & reef",
     pricePerM2: 2600,
     available: 14,
     blurb:
-      "Two bedrooms, an open great room and a generous terrace framing the water.",
+      "Two bedrooms and an open great room, with a generous terrace framing the Caribbean and the Mesoamerican Reef beyond.",
   },
   {
     id: "penthouse",
@@ -50,11 +50,11 @@ export const TYPES: Apartment[] = [
     terrace: 48.0,
     ceiling: 3.8,
     orientation: "South · East · West",
-    view: "Panoramic view",
+    view: "Panoramic Caribbean",
     pricePerM2: 3400,
     available: 2,
     blurb:
-      "The crowning residence — a great room, master suite and a wraparound terrace.",
+      "The crowning residence — a great room, master suite and a wraparound terrace high above the reef.",
   },
 ];
 

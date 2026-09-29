@@ -21,9 +21,9 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Duna Residence — A private riverside residence",
+  title: "Duna Residence — A private island residence on Roatán",
   description:
-    "Explore apartments and floor plans at Duna Residence. Interactive apartment selection: facade, floor, floor plan.",
+    "Beachfront homes at Duna Residence, Próspera · Roatán, Honduras — on the Mesoamerican Reef in the Caribbean. Studios, residences and penthouses with panoramic sea-view terraces.",
 };
 
 export default async function RootLayout({

@@ -37,9 +37,9 @@ export interface SiteContent {
 const DEFAULTS: SiteContent = {
   settings: {
     name: "Duna Residence",
-    tagline: "A private riverside residence",
+    tagline: "A private island residence on Roatán",
     description:
-      "A private riverside residence of premium homes. Panoramic terraces, ceilings 3.1–3.8 m, 24/7 lobby service.",
+      "A private residence on Roatán, in the Bay Islands of the Caribbean. Expansive terraces, ceilings 3.1–3.8 m and 24/7 lobby service — steps from the Mesoamerican Reef.",
     address: "Próspera · Roatán, Honduras",
     phone: "+504 9000-0000",
     email: "sales@dunaresidence.com",
@@ -54,10 +54,10 @@ const DEFAULTS: SiteContent = {
     { id: "t3", quote: "The lobby alone sold us. It feels like arriving at a private hotel every day.", author: "Residents", role: "Studio" },
   ],
   features: [
-    { id: "f1", title: "Panoramic terraces", text: "Private terraces up to 48 m² overlooking the river and park." },
-    { id: "f2", title: "Ceilings 3.1–3.8 m", text: "Floor-to-ceiling glazing and generous ceiling heights on every floor." },
-    { id: "f3", title: "Lobby service", text: "24/7 concierge, private entrance, lounge area and in-residence delivery." },
-    { id: "f4", title: "Smart home", text: "Lighting, climate and access — all controlled from your smartphone." },
+    { id: "f1", title: "On the Mesoamerican Reef", text: "Steps from the world's second-largest coral reef — swim, dive and snorkel straight from home." },
+    { id: "f2", title: "Panoramic terraces", text: "Private terraces up to 48 m² framing the Caribbean Sea and the reef." },
+    { id: "f3", title: "Ceilings 3.1–3.8 m", text: "Floor-to-ceiling glazing and generous ceiling heights on every floor." },
+    { id: "f4", title: "Lobby service", text: "24/7 concierge, private entrance, lounge area and in-residence delivery." },
   ],
 };
 

@@ -33,13 +33,13 @@ export default async function TypePage({
     {
       src: "/images/living.png",
       title: "The great room",
-      text: "Floor-to-ceiling glazing opens the living space onto the terrace and the water.",
+      text: "Floor-to-ceiling glazing opens the living space onto the terrace and the Caribbean.",
       ar: "4 / 4.6",
     },
     {
       src: "/images/terrace.png",
       title: "Private terrace",
-      text: `Outdoor living framed by the horizon — up to ${apt.terrace} m² of your own sky.`,
+      text: `Outdoor living framed by the sea — up to ${apt.terrace} m² above the reef.`,
       ar: "4 / 5.8",
     },
     {
@@ -50,8 +50,8 @@ export default async function TypePage({
     },
     {
       src: "/images/tower-exterior.png",
-      title: "On the water",
-      text: "A slender tower where architecture meets the calm of the coast.",
+      title: "On the reef",
+      text: "Sustainable timber architecture rising above Roatán's Caribbean coast.",
       ar: "4 / 5.8",
     },
   ];
