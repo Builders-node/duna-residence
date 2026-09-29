@@ -1,0 +1,400 @@
+@import "tailwindcss";
+
+/* ─────────────────────────────────────────────
+   DUNA RESIDENCE · "Kononenko" editorial style
+   Monochrome · fluid-rem · signature easing
+   ───────────────────────────────────────────── */
+
+:root {
+  /* fluid rem: 1rem = 1px @ 1920 */
+  font-size: 0.0520833333vw;
+
+  --black: #000000;
+  --white: #ffffff;
+  --gray-3: #929292;
+  --gray-e2: #e2e2e2;
+  --gray-ee: #eeeeee;
+  --gray-f0: #f0f0f0;
+  --accent: #823224;
+  --accent-tint: #a24534;
+
+  --ease: cubic-bezier(0.17, 0.84, 0.44, 1);
+  --ease-smooth: cubic-bezier(0.33, 0, 0.2, 1);
+  --dur-sig: 1.109s;
+  --dur-photo: 1.7s;
+  --dur-hover: 1.4s;
+  --ease-hover: cubic-bezier(0.22, 1, 0.36, 1);
+  --dur-slow: 0.6s;
+  --dur-mid: 0.5s;
+  --dur-fast: 0.3s;
+
+  --pad-x: 40rem;
+}
+
+@media (max-width: 767.98px) {
+  :root {
+    font-size: 0.2666666667vw;
+    --pad-x: 24rem;
+  }
+}
+
+@theme inline {
+  --font-serif: var(--font-cormorant);
+  --font-sans: var(--font-inter);
+  --color-black: #000000;
+  --color-white: #ffffff;
+  --color-gray: #929292;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: auto;
+  font-feature-settings: "kern" off;
+  font-kerning: none;
+  text-rendering: optimizeSpeed;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-size-adjust: none;
+}
+
+@media (min-width: 767.99px) {
+  html {
+    scrollbar-width: none;
+  }
+}
+
+body {
+  background: var(--white);
+  color: var(--black);
+  font-family: var(--font-inter), system-ui, sans-serif;
+  font-size: 16rem;
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  min-height: 100%;
+  width: 100%;
+  overflow-x: hidden;
+}
+
+@media (max-width: 767.98px) {
+  body {
+    font-size: 14rem;
+  }
+}
+
+@media (min-width: 767.99px) {
+  body::-webkit-scrollbar {
+    width: 0 !important;
+    height: 0 !important;
+  }
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-inter), system-ui, sans-serif;
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  line-height: 0.96;
+}
+
+::selection {
+  background: var(--black);
+  color: var(--white);
+}
+
+/* ── Fluid display scale ── */
+.serif {
+  font-family: var(--font-inter), system-ui, sans-serif;
+  font-weight: 500;
+  letter-spacing: -0.025em;
+}
+.fn-h1 {
+  font-family: var(--font-inter), system-ui, sans-serif;
+  font-weight: 600;
+  letter-spacing: -0.035em;
+  font-size: 300rem;
+  line-height: 0.92;
+}
+.fn-h2 {
+  font-family: var(--font-inter), system-ui, sans-serif;
+  font-weight: 600;
+  letter-spacing: -0.035em;
+  font-size: 150rem;
+  line-height: 0.94;
+}
+.fn-h3 {
+  font-family: var(--font-inter), system-ui, sans-serif;
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  font-size: 104rem;
+  line-height: 0.96;
+}
+.fn-h4 {
+  font-family: var(--font-inter), system-ui, sans-serif;
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  font-size: 68rem;
+  line-height: 1;
+}
+
+/* BLOOM-style hero heading — grotesk, value proposition */
+.hero-title {
+  font-family: var(--font-inter), system-ui, sans-serif;
+  font-weight: 500;
+  letter-spacing: -0.025em;
+  line-height: 1.04;
+  font-size: 62rem;
+}
+@media (max-width: 767.98px) {
+  .hero-title { font-size: 34rem; line-height: 1.06; }
+  .fn-h1 { font-size: 62rem; line-height: 0.98; }
+  .fn-h2 { font-size: 44rem; }
+  .fn-h3 { font-size: 36rem; }
+  .fn-h4 { font-size: 30rem; }
+}
+
+.eyebrow {
+  font-family: var(--font-inter), sans-serif;
+  font-size: 13rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--gray-3);
+}
+
+/* ── 15-column grid ── */
+.grid-15 {
+  display: grid;
+  grid-template-columns: repeat(15, 1fr);
+  gap: 15rem;
+}
+
+/* ── Container ── */
+.wrap {
+  width: 100%;
+  padding-inline: var(--pad-x);
+}
+
+/* ── Hairline divider ── */
+.rule {
+  height: 1px;
+  width: 100%;
+  background: var(--gray-e2);
+}
+
+/* ── Link underline sweep ── */
+.link {
+  position: relative;
+  color: currentColor;
+  text-decoration: none;
+  width: fit-content;
+  cursor: pointer;
+}
+.link::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -2rem;
+  width: 100%;
+  height: max(1px, 0.05em);
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform var(--dur-sig) var(--ease);
+  pointer-events: none;
+}
+.link:hover::before {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+.link.is-active::before {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+
+/* ── Buttons ── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12rem;
+  padding: 15rem 30rem;
+  font-family: var(--font-inter), sans-serif;
+  font-size: 16rem;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  color: var(--black);
+  border: 1px solid var(--black);
+  border-radius: 6rem;
+  overflow: hidden;
+  position: relative;
+  isolation: isolate;
+  cursor: pointer;
+  transition: color var(--dur-fast) var(--ease);
+}
+.btn::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--black);
+  transform: translateY(101%);
+  transition: transform var(--dur-mid) var(--ease);
+  z-index: -1;
+}
+.btn:hover {
+  color: var(--white);
+}
+.btn:hover::before {
+  transform: translateY(0);
+}
+.btn--filled {
+  background: var(--black);
+  color: var(--white);
+  border-color: var(--black);
+}
+.btn--filled::before {
+  background: var(--white);
+}
+.btn--filled:hover {
+  color: var(--black);
+}
+
+/* buttons on dark / accent backgrounds */
+.btn-light {
+  border-color: rgba(255, 255, 255, 0.55);
+  color: #fff;
+}
+.btn-light::before {
+  background: #fff;
+}
+.btn-light:hover {
+  color: var(--accent);
+}
+.btn--onaccent {
+  background: #fff;
+  color: var(--accent);
+  border-color: #fff;
+}
+.btn--onaccent::before {
+  background: var(--accent);
+}
+.btn--onaccent:hover {
+  color: #fff;
+}
+
+/* BLOOM-style hero buttons (on photo) — squared corners */
+.btn-hero {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 17rem 34rem;
+  font-family: var(--font-inter), sans-serif;
+  font-size: 16rem;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  border-radius: 6rem;
+  cursor: pointer;
+  transition: background var(--dur-fast) var(--ease),
+    color var(--dur-fast) var(--ease);
+}
+.btn-hero--ghost {
+  background: rgba(30, 30, 30, 0.5);
+  color: #fff;
+  backdrop-filter: blur(8px);
+}
+.btn-hero--ghost:hover {
+  background: rgba(30, 30, 30, 0.68);
+}
+.btn-hero--solid {
+  background: #fff;
+  color: #000;
+}
+.btn-hero--solid:hover {
+  background: rgba(255, 255, 255, 0.86);
+}
+
+/* ── Scroll progress bar ── */
+.progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 10000;
+  width: 100%;
+  height: 3px;
+  background: var(--accent);
+  transform: scaleX(0);
+  transform-origin: left;
+  will-change: transform;
+}
+
+/* ── Line-mask reveal ── */
+.ln-mask {
+  display: block;
+  overflow: hidden;
+}
+.ln-mask > * {
+  display: block;
+  transform: translateY(110%);
+  transition: transform var(--dur-sig) var(--ease);
+  will-change: transform;
+}
+.is-inview .ln-mask > * {
+  transform: translateY(0);
+}
+
+/* generic fade/rise reveal */
+.reveal {
+  opacity: 0;
+  transform: translateY(28rem);
+  transition: opacity var(--dur-slow) var(--ease),
+    transform var(--dur-sig) var(--ease);
+  will-change: transform, opacity;
+}
+.is-inview .reveal,
+.reveal.is-inview {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@keyframes cueSlide {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(200%); }
+}
+
+/* ── Editorial staggered gallery ── */
+.egallery {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 28rem;
+  align-items: start; /* all cards start at the same top line */
+}
+@media (max-width: 900px) {
+  .egallery { grid-template-columns: repeat(2, 1fr); gap: 40rem 28rem; }
+}
+@media (max-width: 520px) {
+  .egallery { grid-template-columns: 1fr; }
+}
+
+/* ── Horizontal plan slider track ── */
+.plan-track {
+  display: flex;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+.plan-track::-webkit-scrollbar {
+  display: none;
+}
+
+/* ── Image lazy reveal ── */
+.media {
+  overflow: hidden;
+}
+.media img {
+  transition: transform var(--dur-photo) var(--ease-smooth),
+    opacity var(--dur-fast) var(--ease);
+}
