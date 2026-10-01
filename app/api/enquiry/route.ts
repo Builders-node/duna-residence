@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import { addEnquiry, listEnquiries } from "@/lib/enquiries";
 import { isAuthorized } from "@/lib/admin-auth";
+import { rateLimit, clientIp } from "@/lib/ratelimit";
+import { notifyNewEnquiry } from "@/lib/notify";
 
 export const dynamic = "force-dynamic";
 
@@ -11,11 +13,26 @@ export async function POST(req: Request) {
     phone?: string;
     interest?: string;
     message?: string;
+    company?: string; // honeypot — real users never fill this
   };
   try {
     body = await req.json();
   } catch {
     return NextResponse.json({ error: "Invalid JSON" }, { status: 400 });
+  }
+
+  // Honeypot: bots fill hidden fields. Pretend success, store nothing.
+  if (body.company && body.company.trim() !== "") {
+    return NextResponse.json({ ok: true });
+  }
+
+  // Rate limit: max 5 submissions per IP per 10 minutes.
+  const allowed = await rateLimit("enquiry", clientIp(req), 5, 600);
+  if (!allowed) {
+    return NextResponse.json(
+      { error: "Too many requests. Please try again later." },
+      { status: 429 }
+    );
   }
 
   const name = (body.name || "").trim();
@@ -31,6 +48,9 @@ export async function POST(req: Request) {
     interest: (body.interest || "Undecided").trim(),
     message: (body.message || "").trim() || undefined,
   });
+
+  // Fire-and-forget notification (no-op unless RESEND_API_KEY + NOTIFY_EMAIL set)
+  await notifyNewEnquiry(entry);
 
   return NextResponse.json({ ok: true, id: entry.id });
 }

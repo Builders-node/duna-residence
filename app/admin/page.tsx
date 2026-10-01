@@ -249,7 +249,6 @@ export default function AdminPage() {
             style={{ width: "100%", padding: "13px 14px", border: "1px solid #000", borderRadius: 6, fontSize: 15, fontFamily: FONT, outline: "none" }} />
           {loginErr && <div style={{ color: "#c00", fontSize: 13, marginTop: 8 }}>{loginErr}</div>}
           <button type="submit" style={{ marginTop: 16, width: "100%", padding: "14px", background: "#000", color: "#fff", border: "none", borderRadius: 6, fontSize: 15, fontWeight: 500, cursor: "pointer", fontFamily: FONT }}>Sign in</button>
-          <div style={{ marginTop: 14, fontSize: 12, color: "#929292" }}>Demo password: <b style={{ color: "#000" }}>duna-admin</b></div>
         </form>
       </div>
     );

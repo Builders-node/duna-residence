@@ -37,7 +37,7 @@ export default function ContactForm({
   settings?: Pick<SiteSettings, "phone" | "email" | "address">;
 }) {
   const initialInterest = defaultInterest && INTERESTS.includes(defaultInterest) ? defaultInterest : "Undecided";
-  const [form, setForm] = useState({ name: "", email: "", phone: "", interest: initialInterest, message: "" });
+  const [form, setForm] = useState({ name: "", email: "", phone: "", interest: initialInterest, message: "", company: "" });
   const [state, setState] = useState<"idle" | "sending" | "done" | "error">("idle");
   const [err, setErr] = useState("");
 
@@ -106,6 +106,17 @@ export default function ContactForm({
               </div>
             ) : (
               <form onSubmit={submit} style={{ display: "flex", flexDirection: "column", gap: "20rem" }}>
+                {/* honeypot — hidden from humans, bots fill it */}
+                <input
+                  type="text"
+                  name="company"
+                  value={form.company}
+                  onChange={set("company")}
+                  tabIndex={-1}
+                  autoComplete="off"
+                  aria-hidden="true"
+                  style={{ position: "absolute", left: "-9999px", width: "1px", height: "1px", opacity: 0 }}
+                />
                 <div className="grid sm:grid-cols-2" style={{ gap: "20rem" }}>
                   <div>
                     <label style={labelStyle}>Full name *</label>

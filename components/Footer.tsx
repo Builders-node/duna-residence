@@ -46,11 +46,15 @@ export default function Footer({ settings }: { settings: SiteSettings }) {
         </div>
 
         <div
-          className="flex flex-col sm:flex-row justify-between"
+          className="flex flex-col sm:flex-row sm:items-center justify-between"
           style={{ marginTop: "96rem", paddingTop: "24rem", borderTop: "1px solid rgba(255,255,255,0.16)", gap: "12rem", fontSize: "13rem", color: "#929292" }}
         >
           <span>© {year} {settings.name}</span>
-          <span>Images and floor plans are for illustration only</span>
+          <div className="flex flex-wrap items-center" style={{ gap: "18rem" }}>
+            <Link href="/privacy" className="link">Privacy Policy</Link>
+            <Link href="/terms" className="link">Terms of Use</Link>
+            <span>Images and floor plans are for illustration only</span>
+          </div>
         </div>
       </div>
     </footer>

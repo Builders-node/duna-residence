@@ -4,6 +4,7 @@ import { usePathname } from "next/navigation";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import SmoothScroll from "@/components/SmoothScroll";
+import CookieConsent from "@/components/CookieConsent";
 import { FavoritesProvider } from "@/components/Favorites";
 import type { SiteSettings } from "@/lib/site";
 
@@ -26,6 +27,7 @@ export default function LayoutChrome({
       <Header settings={settings} />
       {children}
       <Footer settings={settings} />
+      <CookieConsent />
     </FavoritesProvider>
   );
 }
