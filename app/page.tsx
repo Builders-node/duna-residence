@@ -36,8 +36,8 @@ export default async function Home() {
     <main>
       {/* ── HERO · background video, fixed text ── */}
       <HeroVideo
-        src="/videos/duna-reveal-scrub.mp4"
-        poster="/images/tower-exterior.png"
+        src="/videos/duna-hero-loop.mp4"
+        poster="/images/hero-poster.jpg"
         eyebrow="Private residence · Próspera, Roatán"
         title="Your home above the Caribbean reef"
         actions={
