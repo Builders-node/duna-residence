@@ -1,15 +1,28 @@
 "use client";
 
 import { useRef, useState } from "react";
-import FloorPlan, { planMeta, planDetail } from "./FloorPlan";
-import { PlanType } from "@/lib/types";
 
-/** Floor plans as a horizontal slider; click a plan for a detail modal. */
-export default function PlanViewer({ type }: { type: PlanType }) {
-  const meta = planMeta(type);
+export interface PlanItem {
+  id: string;
+  label: string;
+  area: number | null;
+  roomsDesc: string;
+  url: string;
+}
+
+/** Real floor-plan images as a horizontal slider; click a plan for a detail modal. */
+export default function PlanViewer({ plans }: { plans: PlanItem[] }) {
   const track = useRef<HTMLDivElement>(null);
   const drag = useRef({ down: false, startX: 0, left: 0, moved: false });
   const [open, setOpen] = useState<number | null>(null);
+
+  if (!plans || plans.length === 0) {
+    return (
+      <div style={{ border: "1px solid var(--gray-e2)", borderRadius: "6rem", padding: "48rem", textAlign: "center", color: "var(--gray-3)", fontSize: "15rem" }}>
+        Floor plans coming soon.
+      </div>
+    );
+  }
 
   const scrollByCards = (dir: number) => {
     const el = track.current;
@@ -33,7 +46,7 @@ export default function PlanViewer({ type }: { type: PlanType }) {
     </button>
   );
 
-  const detail = open !== null ? planDetail(type, open) : null;
+  const detail = open !== null ? plans[open] : null;
 
   return (
     <div>
@@ -66,26 +79,32 @@ export default function PlanViewer({ type }: { type: PlanType }) {
           if (el) { el.style.cursor = "grab"; el.style.scrollSnapType = "x mandatory"; }
         }}
       >
-        {meta.map((m, i) => (
+        {plans.map((p, i) => (
           <figure
-            key={m.name}
+            key={p.id}
             onClick={() => { if (!drag.current.moved) setOpen(i); }}
-            style={{ flex: "0 0 auto", width: "420rem", maxWidth: "82vw", scrollSnapAlign: "start", cursor: "pointer" }}
+            style={{ flex: "0 0 auto", width: "520rem", maxWidth: "88vw", scrollSnapAlign: "start", cursor: "pointer" }}
           >
             <div
               className="group"
               style={{
                 position: "relative",
-                border: "1px solid var(--gray-e2)", borderRadius: "6rem", padding: "36rem",
-                aspectRatio: "1 / 1", display: "grid", placeItems: "center",
-                transition: "border-color var(--dur-fast) var(--ease)",
+                border: "1px solid var(--gray-e2)", borderRadius: "6rem", padding: "20rem",
+                aspectRatio: "16 / 10", display: "grid", placeItems: "center", overflow: "hidden",
+                background: "#fff", transition: "border-color var(--dur-fast) var(--ease)",
               }}
             >
-              <FloorPlan type={type} variant={i} className="w-full h-auto" />
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={p.url}
+                alt={`${p.label} floor plan`}
+                draggable={false}
+                style={{ maxWidth: "100%", maxHeight: "100%", objectFit: "contain", userSelect: "none" }}
+              />
               <span
                 className="group-hover:opacity-100"
                 style={{
-                  position: "absolute", bottom: "16rem", right: "16rem", opacity: 0,
+                  position: "absolute", bottom: "14rem", right: "14rem", opacity: 0,
                   fontSize: "12rem", color: "#fff", background: "var(--accent)",
                   padding: "7rem 12rem", borderRadius: "5rem",
                   transition: "opacity var(--dur-fast) var(--ease)",
@@ -96,10 +115,14 @@ export default function PlanViewer({ type }: { type: PlanType }) {
             </div>
             <div className="flex items-baseline justify-between" style={{ marginTop: "16rem" }}>
               <div>
-                <div className="serif" style={{ fontSize: "20rem" }}>{m.name}</div>
-                <div style={{ fontSize: "13rem", color: "var(--gray-3)", marginTop: "4rem" }}>{m.desc}</div>
+                <div className="serif" style={{ fontSize: "20rem" }}>{p.label}</div>
+                {(p.area || p.roomsDesc) && (
+                  <div style={{ fontSize: "13rem", color: "var(--gray-3)", marginTop: "4rem" }}>
+                    {p.area ? `${p.area} m²` : ""}{p.area && p.roomsDesc ? " · " : ""}{p.roomsDesc}
+                  </div>
+                )}
               </div>
-              <span className="eyebrow">0{i + 1}</span>
+              <span className="eyebrow">{String(i + 1).padStart(2, "0")}</span>
             </div>
           </figure>
         ))}
@@ -122,15 +145,22 @@ export default function PlanViewer({ type }: { type: PlanType }) {
             aria-modal="true"
             style={{
               position: "fixed", top: "50%", left: "50%", transform: "translate(-50%, -50%)",
-              width: "min(960rem, 94vw)", maxHeight: "90vh", overflowY: "auto",
+              width: "min(1040rem, 95vw)", maxHeight: "92vh", overflowY: "auto",
               background: "#fff", borderRadius: "10rem", zIndex: 91,
               boxShadow: "0 30px 90px rgba(0,0,0,0.35)",
             }}
           >
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", padding: "36rem 40rem 0" }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", padding: "32rem 36rem 0" }}>
               <div>
-                <div className="eyebrow">{detail.name} · Layout</div>
-                <h3 className="serif" style={{ fontSize: "40rem", marginTop: "10rem", lineHeight: 1 }}>{detail.desc}</h3>
+                <div className="eyebrow">{detail.label} · Floor plan</div>
+                {(detail.area || detail.roomsDesc) && (
+                  <h3 className="serif" style={{ fontSize: "34rem", marginTop: "10rem", lineHeight: 1.05 }}>
+                    {detail.area ? `${detail.area} m²` : detail.label}
+                  </h3>
+                )}
+                {detail.roomsDesc && (
+                  <p style={{ fontSize: "15rem", color: "var(--gray-3)", marginTop: "8rem" }}>{detail.roomsDesc}</p>
+                )}
               </div>
               <button
                 onClick={() => setOpen(null)}
@@ -141,29 +171,17 @@ export default function PlanViewer({ type }: { type: PlanType }) {
               </button>
             </div>
 
-            <div className="grid md:grid-cols-2" style={{ gap: "40rem", padding: "32rem 40rem 40rem", alignItems: "center" }}>
-              <div style={{ border: "1px solid var(--gray-e2)", borderRadius: "6rem", padding: "32rem" }}>
-                <FloorPlan type={type} variant={open} className="w-full h-auto" />
+            <div style={{ padding: "24rem 36rem 16rem" }}>
+              <div style={{ border: "1px solid var(--gray-e2)", borderRadius: "6rem", padding: "24rem", background: "#fff" }}>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={detail.url} alt={`${detail.label} floor plan`} style={{ width: "100%", height: "auto", display: "block" }} />
               </div>
+            </div>
 
-              <div>
-                <div className="eyebrow">Rooms</div>
-                <div style={{ marginTop: "16rem" }}>
-                  {detail.rooms.map((r, idx) => (
-                    <div
-                      key={idx}
-                      className="flex items-center justify-between"
-                      style={{ padding: "12rem 0", borderTop: idx === 0 ? "none" : "1px solid var(--gray-e2)" }}
-                    >
-                      <span style={{ fontSize: "16rem" }}>{r.label}</span>
-                      <span style={{ fontSize: "14rem", color: "var(--gray-3)" }}>{r.sub || "—"}</span>
-                    </div>
-                  ))}
-                </div>
-                <a href="#contact" onClick={() => setOpen(null)} className="btn btn--filled" style={{ marginTop: "28rem" }}>
-                  Enquire about this layout
-                </a>
-              </div>
+            <div style={{ padding: "0 36rem 36rem" }}>
+              <a href="#contact" onClick={() => setOpen(null)} className="btn btn--filled">
+                Enquire about this layout
+              </a>
             </div>
           </div>
         </>

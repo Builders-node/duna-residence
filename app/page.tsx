@@ -2,7 +2,6 @@ import Image from "next/image";
 import Link from "next/link";
 import TypeCards from "@/components/TypeCards";
 import HeroVideo from "@/components/HeroVideo";
-import FloorPlan from "@/components/FloorPlan";
 import RevealLines from "@/components/RevealLines";
 import Reveal from "@/components/Reveal";
 import LocationMap from "@/components/LocationMap";
@@ -10,6 +9,7 @@ import ContactForm from "@/components/ContactForm";
 import { ROOM_LABEL } from "@/lib/data";
 import { getStoredApartments } from "@/lib/store";
 import { getSiteContent } from "@/lib/site";
+import { getPlansByApartment } from "@/lib/plans";
 
 export const dynamic = "force-dynamic";
 
@@ -22,6 +22,7 @@ const GALLERY = [
 export default async function Home() {
   const types = await getStoredApartments();
   const { settings, testimonials, features } = await getSiteContent();
+  const plansByApt = await getPlansByApartment();
   const AVAILABLE = types.reduce((s, t) => s + t.available, 0);
   const areas = types.map((t) => t.area);
   const STATS: [string, string][] = [
@@ -80,23 +81,31 @@ export default async function Home() {
             <RevealLines as="h2" className="fn-h2" lines={["A plan for every", "way of living."]} />
           </div>
           <p style={{ color: "var(--gray-3)", fontSize: "16rem", lineHeight: 1.45, maxWidth: "42ch" }}>
-            Each home type comes in three interchangeable layouts. Explore the
-            arrangements and pick the one that fits how you live.
+            Real floor plans for every home type — corner and centre layouts.
+            Explore them and pick the one that fits how you live.
           </p>
         </div>
 
-        <div className="grid md:grid-cols-3" style={{ gap: "24rem" }}>
-          {types.map((t, i) => (
+        <div className="grid md:grid-cols-2" style={{ gap: "24rem" }}>
+          {types.map((t, i) => {
+            const plans = plansByApt[t.id] ?? [];
+            const cover = plans[0]?.url;
+            return (
             <Link key={t.id} href={`/apartment/${t.id}#plan`} className="group block">
               <div
                 style={{
                   position: "relative",
-                  border: "1px solid var(--gray-e2)", borderRadius: "6rem", padding: "32rem",
-                  aspectRatio: "1 / 1", display: "grid", placeItems: "center",
-                  transition: "border-color var(--dur-fast) var(--ease)",
+                  border: "1px solid var(--gray-e2)", borderRadius: "6rem", padding: "28rem",
+                  aspectRatio: "16 / 10", display: "grid", placeItems: "center", overflow: "hidden",
+                  background: "#fff", transition: "border-color var(--dur-fast) var(--ease)",
                 }}
               >
-                <FloorPlan type={t.planType} variant={0} className="w-full h-auto" />
+                {cover ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img src={cover} alt={`${t.name} floor plan`} style={{ maxWidth: "100%", maxHeight: "100%", objectFit: "contain" }} />
+                ) : (
+                  <span style={{ color: "var(--gray-3)", fontSize: "14rem" }}>Plan coming soon</span>
+                )}
                 <span
                   className="group-hover:opacity-100"
                   style={{
@@ -106,20 +115,21 @@ export default async function Home() {
                     transition: "opacity var(--dur-fast) var(--ease)",
                   }}
                 >
-                  View 3 layouts
+                  View {plans.length || ""} {plans.length === 1 ? "layout" : "layouts"}
                 </span>
               </div>
               <div className="flex items-baseline justify-between" style={{ marginTop: "16rem" }}>
                 <div>
                   <div className="serif" style={{ fontSize: "22rem" }}>{t.name}</div>
                   <div style={{ fontSize: "13rem", color: "var(--gray-3)", marginTop: "4rem" }}>
-                    {ROOM_LABEL[t.rooms]} · {t.area} m²
+                    {ROOM_LABEL[t.rooms]} · from {t.area} m²
                   </div>
                 </div>
                 <span className="eyebrow">0{i + 1}</span>
               </div>
             </Link>
-          ))}
+            );
+          })}
         </div>
       </section>
 

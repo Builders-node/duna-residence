@@ -6,55 +6,39 @@ export const BUILDING = {
   address: "Próspera · Roatán, Honduras",
 };
 
-/** Three home types. Choose a type — the price is simply per m². */
+/** Home types at Duna Torre 2. Choose a type — the price is simply per m². */
 export const TYPES: Apartment[] = [
   {
-    id: "studio",
-    name: "Studio",
-    planType: "studio",
-    rooms: 0,
-    area: 38.6,
-    livingArea: 26.0,
-    terrace: 4.8,
-    ceiling: 3.1,
-    orientation: "West",
-    view: "Caribbean sunset",
-    pricePerM2: 2350,
-    available: 8,
-    blurb:
-      "A compact, light-filled home opening west to the Caribbean — an open living space and a private terrace for the sunset.",
-  },
-  {
-    id: "residence",
-    name: "Residence",
+    id: "two-bed",
+    name: "2-Bedroom",
     planType: "two",
     rooms: 2,
-    area: 78.4,
-    livingArea: 44.2,
-    terrace: 9.6,
-    ceiling: 3.1,
-    orientation: "South · East",
+    area: 57.6,
+    livingArea: 40.0,
+    terrace: 17.0,
+    ceiling: 3.0,
+    orientation: "Sea-facing",
     view: "Sea & reef",
     pricePerM2: 2600,
-    available: 14,
+    available: 12,
     blurb:
-      "Two bedrooms and an open great room, with a generous terrace framing the Caribbean and the Mesoamerican Reef beyond.",
+      "Two bedrooms, two baths and an open living–dining–kitchen opening to a sea-view balcony. Corner and centre layouts available.",
   },
   {
-    id: "penthouse",
-    name: "Penthouse",
-    planType: "penthouse",
-    rooms: 4,
-    area: 186.3,
-    livingArea: 112.0,
-    terrace: 48.0,
-    ceiling: 3.8,
-    orientation: "South · East · West",
+    id: "three-bed",
+    name: "3-Bedroom",
+    planType: "three",
+    rooms: 3,
+    area: 76.6,
+    livingArea: 52.0,
+    terrace: 20.0,
+    ceiling: 3.0,
+    orientation: "Corner · sea",
     view: "Panoramic Caribbean",
-    pricePerM2: 3400,
-    available: 2,
+    pricePerM2: 3100,
+    available: 6,
     blurb:
-      "The crowning residence — a great room, master suite and a wraparound terrace high above the reef.",
+      "Three bedrooms including a master with walk-in closet, an open great room and a wide balcony over the Caribbean. Corner and centre layouts.",
   },
 ];
 
@@ -78,12 +62,10 @@ export const ROOM_LABEL: Record<number, string> = {
 
 export function planTypeLabel(t: PlanType): string {
   switch (t) {
-    case "studio":
-      return "Studio";
     case "two":
       return "2-bedroom";
-    case "penthouse":
-      return "Penthouse";
+    case "three":
+      return "3-bedroom";
   }
 }
 

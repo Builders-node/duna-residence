@@ -1,10 +1,12 @@
 import ApartmentCard from "@/components/ApartmentCard";
 import { getStoredApartments } from "@/lib/store";
+import { getPlansByApartment } from "@/lib/plans";
 
 export const dynamic = "force-dynamic";
 
 export default async function ApartmentsPage() {
   const types = await getStoredApartments();
+  const plansByApt = await getPlansByApartment();
   const available = types.reduce((s, t) => s + t.available, 0);
 
   return (
@@ -27,7 +29,7 @@ export default async function ApartmentsPage() {
           style={{ marginTop: "48rem", gap: "24rem" }}
         >
           {types.map((a) => (
-            <ApartmentCard key={a.id} a={a} />
+            <ApartmentCard key={a.id} a={a} planUrl={plansByApt[a.id]?.[0]?.url} />
           ))}
         </div>
       </div>

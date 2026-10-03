@@ -3,15 +3,16 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import FloorPlan from "./FloorPlan";
 import { FavoriteButton } from "./Favorites";
 import { Apartment } from "@/lib/types";
-import { APARTMENTS, planTypeLabel, formatRate, formatPrice, unitPrice, ROOM_LABEL } from "@/lib/data";
+import { APARTMENTS, formatRate, formatPrice, unitPrice, ROOM_LABEL } from "@/lib/data";
+
+type PlanLite = { url: string; label: string };
+type TypeWithPlans = Apartment & { plans?: PlanLite[] };
 
 const IMG: Record<string, string> = {
-  studio: "/images/living.png",
-  residence: "/images/terrace.png",
-  penthouse: "/images/tower-exterior.png",
+  "two-bed": "/images/living.png",
+  "three-bed": "/images/terrace.png",
 };
 
 // warm terracotta panels derived from the accent, varied per row
@@ -22,7 +23,7 @@ const PANEL = [
 ];
 
 export default function TypeCards() {
-  const [types, setTypes] = useState<Apartment[]>(APARTMENTS);
+  const [types, setTypes] = useState<TypeWithPlans[]>(APARTMENTS);
 
   useEffect(() => {
     fetch("/api/apartments", { cache: "no-store" })
@@ -73,7 +74,7 @@ export default function TypeCards() {
                 <div>
                   <h3 className="serif" style={{ fontSize: "40rem", lineHeight: 1 }}>{t.name}</h3>
                   <div style={{ marginTop: "12rem", fontSize: "16rem", color: "rgba(255,255,255,0.8)" }}>
-                    {planTypeLabel(t.planType)} · {ROOM_LABEL[t.rooms]}
+                    {ROOM_LABEL[t.rooms]}
                   </div>
                   <div style={{ marginTop: "6rem", fontSize: "16rem", color: "rgba(255,255,255,0.8)" }}>
                     {t.area} m² · {formatRate(t.pricePerM2)}
@@ -98,12 +99,19 @@ export default function TypeCards() {
                   </div>
                 </div>
 
-                {/* avatar = mini floor plan */}
+                {/* avatar = mini floor plan thumbnail */}
                 <div
-                  className="shrink-0"
-                  style={{ width: "64rem", height: "64rem", borderRadius: "999px", background: "#f4f0ee", display: "grid", placeItems: "center", padding: "10rem" }}
+                  className="shrink-0 overflow-hidden"
+                  style={{ width: "64rem", height: "64rem", borderRadius: "999px", background: "#f4f0ee", display: "grid", placeItems: "center", padding: "8rem" }}
                 >
-                  <FloorPlan type={t.planType} className="w-full h-full" />
+                  {t.plans && t.plans[0] ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img src={t.plans[0].url} alt="" style={{ width: "100%", height: "100%", objectFit: "contain" }} />
+                  ) : (
+                    <svg width="60%" height="60%" viewBox="0 0 24 24" fill="none" stroke="#823224" strokeWidth="1.5">
+                      <rect x="3" y="3" width="18" height="18" rx="1" /><path d="M3 10h18M10 10v11" />
+                    </svg>
+                  )}
                 </div>
               </div>
 

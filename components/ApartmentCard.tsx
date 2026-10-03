@@ -1,10 +1,9 @@
 import Link from "next/link";
 import { Apartment } from "@/lib/types";
 import { ROOM_LABEL, formatRate, formatPrice, planTypeLabel, unitPrice } from "@/lib/data";
-import FloorPlan from "./FloorPlan";
 import { FavoriteButton } from "./Favorites";
 
-export default function ApartmentCard({ a }: { a: Apartment }) {
+export default function ApartmentCard({ a, planUrl }: { a: Apartment; planUrl?: string }) {
   return (
     <Link
       href={`/apartment/${a.id}`}
@@ -17,10 +16,17 @@ export default function ApartmentCard({ a }: { a: Apartment }) {
         style={{ padding: "24rem", background: "var(--white)" }}
       >
         <div
-          className="w-full h-full group-hover:scale-[1.025]"
+          className="w-full h-full flex items-center justify-center group-hover:scale-[1.025]"
           style={{ transition: "transform var(--dur-hover) var(--ease-hover)" }}
         >
-          <FloorPlan type={a.planType} className="w-full h-full" />
+          {planUrl ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src={planUrl} alt={`${a.name} floor plan`} style={{ maxWidth: "100%", maxHeight: "100%", objectFit: "contain" }} />
+          ) : (
+            <svg width="40%" height="40%" viewBox="0 0 24 24" fill="none" stroke="var(--gray-3)" strokeWidth="1.3">
+              <rect x="3" y="3" width="18" height="18" rx="1" /><path d="M3 10h18M10 10v11" />
+            </svg>
+          )}
         </div>
         <div className="absolute eyebrow" style={{ top: "16rem", left: "16rem", color: "var(--gray-3)" }}>
           {a.available} available

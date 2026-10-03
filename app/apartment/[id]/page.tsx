@@ -3,6 +3,7 @@ import Link from "next/link";
 import { formatPrice, formatRate, unitPrice, ROOM_LABEL, planTypeLabel } from "@/lib/data";
 import { getStoredApartments } from "@/lib/store";
 import { getSiteContent } from "@/lib/site";
+import { getPlansForApartment } from "@/lib/plans";
 import PlanViewer from "@/components/PlanViewer";
 import RevealImage from "@/components/RevealImage";
 import RevealLines from "@/components/RevealLines";
@@ -23,8 +24,8 @@ export default async function TypePage({
   const { settings } = await getSiteContent();
   const apt = all.find((a) => a.id === id);
   if (!apt) notFound();
+  const plans = await getPlansForApartment(apt.id);
 
-  const isPent = apt.planType === "penthouse";
   const idx = all.findIndex((a) => a.id === apt.id);
   const next = all[(idx + 1) % all.length];
 
@@ -146,12 +147,12 @@ export default async function TypePage({
       <section id="plan" className="wrap scroll-mt-28" style={{ paddingTop: "80rem", paddingBottom: "80rem" }}>
         <div className="flex items-baseline justify-between" style={{ marginBottom: "12rem" }}>
           <h2 className="fn-h3">Layouts</h2>
-          <span className="eyebrow">3 options · {apt.area} m²</span>
+          <span className="eyebrow">{plans.length} {plans.length === 1 ? "layout" : "layouts"}</span>
         </div>
         <p style={{ color: "var(--gray-3)", fontSize: "16rem", lineHeight: 1.45, maxWidth: "54ch", marginBottom: "32rem" }}>
-          Possible layout configurations for this home type — pick the arrangement that best suits how you live.
+          Real floor plans for this home type — corner and centre layouts. Areas shown are without balcony.
         </p>
-        <PlanViewer type={apt.planType} />
+        <PlanViewer plans={plans} />
       </section>
 
       {/* ── EDITORIAL GALLERY ── */}

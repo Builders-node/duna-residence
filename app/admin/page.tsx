@@ -6,6 +6,9 @@ import { Apartment } from "@/lib/types";
 import { formatPrice, formatRate, unitPrice, planTypeLabel } from "@/lib/data";
 import type { SiteContent, Testimonial, Feature } from "@/lib/site";
 import type { Enquiry } from "@/lib/enquiries";
+import type { Plan } from "@/lib/plans";
+
+type AptRow = Apartment & { plans?: Plan[] };
 
 const TOKEN_KEY = "duna-admin-token";
 const FONT = "var(--font-inter), system-ui, sans-serif";
@@ -30,9 +33,12 @@ export default function AdminPage() {
   const [toast, setToast] = useState("");
 
   // home types
-  const [types, setTypes] = useState<Apartment[]>([]);
+  const [types, setTypes] = useState<AptRow[]>([]);
   const [loading, setLoading] = useState(false);
-  const [editing, setEditing] = useState<Apartment | null>(null);
+  const [editing, setEditing] = useState<AptRow | null>(null);
+  const [planForm, setPlanForm] = useState({ label: "", area: "", roomsDesc: "" });
+  const [planFile, setPlanFile] = useState<File | null>(null);
+  const [planBusy, setPlanBusy] = useState(false);
   const [draft, setDraft] = useState<Draft | null>(null);
   const [saving, setSaving] = useState(false);
 
@@ -130,7 +136,7 @@ export default function AdminPage() {
   };
 
   // ── type editor ──
-  const openEditor = (a: Apartment) => {
+  const openEditor = (a: AptRow) => {
     setEditing(a);
     setDraft({
       name: a.name, pricePerM2: a.pricePerM2, available: a.available, area: a.area,
@@ -159,6 +165,54 @@ export default function AdminPage() {
     } finally {
       setSaving(false);
     }
+  };
+
+  const refreshAndSync = async (aptId: string) => {
+    try {
+      const res = await fetch("/api/apartments", { cache: "no-store" });
+      const data = await res.json();
+      const list: AptRow[] = Array.isArray(data.apartments) ? data.apartments : [];
+      setTypes(list);
+      const cur = list.find((x) => x.id === aptId);
+      if (cur) setEditing(cur);
+    } catch { /* ignore */ }
+  };
+
+  const uploadPlan = async () => {
+    if (!editing || !planFile) { setToast("Choose an image first"); return; }
+    if (!planForm.label.trim()) { setToast("Add a label (e.g. Corner)"); return; }
+    setPlanBusy(true);
+    try {
+      const fd = new FormData();
+      fd.append("apartmentId", editing.id);
+      fd.append("label", planForm.label);
+      fd.append("area", planForm.area);
+      fd.append("roomsDesc", planForm.roomsDesc);
+      fd.append("file", planFile);
+      const res = await fetch("/api/plans", { method: "POST", headers: { "x-admin-token": token || "" }, body: fd });
+      if (res.status === 401) { setToast("Session expired — please sign in again"); logout(); return; }
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) { setToast(data.error || "Upload failed"); return; }
+      setToast("Plan added");
+      setPlanForm({ label: "", area: "", roomsDesc: "" });
+      setPlanFile(null);
+      await refreshAndSync(editing.id);
+    } catch {
+      setToast("Network error — plan not added");
+    } finally {
+      setPlanBusy(false);
+    }
+  };
+
+  const removePlan = async (id: string) => {
+    if (!editing) return;
+    if (!confirm("Delete this floor plan?")) return;
+    try {
+      const res = await fetch(`/api/plans/${id}`, { method: "DELETE", headers: { "x-admin-token": token || "" } });
+      if (res.status === 401) { setToast("Session expired — please sign in again"); logout(); return; }
+      if (res.ok) { setToast("Plan deleted"); await refreshAndSync(editing.id); }
+      else setToast("Could not delete plan");
+    } catch { setToast("Network error"); }
   };
 
   const resetDemo = async () => {
@@ -499,6 +553,35 @@ export default function AdminPage() {
                 <textarea value={draft.blurb} onChange={(e) => setDraft({ ...draft, blurb: e.target.value })} rows={3}
                   style={{ width: "100%", padding: "10px 12px", border: `1px solid ${BORDER}`, borderRadius: 6, fontSize: 14, fontFamily: "inherit", outline: "none", resize: "vertical" }} />
               </Field>
+
+              {/* floor plans */}
+              <div style={{ marginTop: 8, paddingTop: 20, borderTop: `1px solid ${BORDER}` }}>
+                <div style={{ fontSize: 11, textTransform: "uppercase", letterSpacing: "0.06em", color: "#929292", marginBottom: 12 }}>Floor plans</div>
+                <div style={{ display: "grid", gap: 8 }}>
+                  {(editing.plans ?? []).map((p) => (
+                    <div key={p.id} style={{ display: "flex", alignItems: "center", gap: 12, border: `1px solid ${BORDER}`, borderRadius: 6, padding: "8px 10px" }}>
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img src={p.url} alt="" style={{ width: 52, height: 38, objectFit: "contain", background: "#f6f6f6", borderRadius: 4, flexShrink: 0 }} />
+                      <div style={{ flex: 1, minWidth: 0 }}>
+                        <div style={{ fontSize: 14, fontWeight: 600 }}>{p.label}{p.area ? ` · ${p.area} m²` : ""}</div>
+                        {p.roomsDesc && <div style={{ fontSize: 12, color: "#929292", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{p.roomsDesc}</div>}
+                      </div>
+                      <button onClick={() => removePlan(p.id)} style={{ border: "none", background: "none", color: "#b3271b", cursor: "pointer", fontSize: 13, fontFamily: FONT, flexShrink: 0 }}>Delete</button>
+                    </div>
+                  ))}
+                  {(!editing.plans || editing.plans.length === 0) && <div style={{ fontSize: 13, color: "#929292" }}>No plans yet.</div>}
+                </div>
+
+                <div style={{ marginTop: 12, border: `1px dashed ${BORDER}`, borderRadius: 6, padding: 12, display: "grid", gap: 8 }}>
+                  <input type="file" accept="image/*" onChange={(e) => setPlanFile(e.target.files?.[0] || null)} style={{ fontSize: 13 }} />
+                  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 }}>
+                    <input placeholder="Label (e.g. Corner)" value={planForm.label} onChange={(e) => setPlanForm({ ...planForm, label: e.target.value })} style={inputStyle} />
+                    <input placeholder="Area m² (optional)" value={planForm.area} onChange={(e) => setPlanForm({ ...planForm, area: e.target.value })} style={inputStyle} />
+                  </div>
+                  <input placeholder="Rooms (e.g. 2 bed · 2 bath)" value={planForm.roomsDesc} onChange={(e) => setPlanForm({ ...planForm, roomsDesc: e.target.value })} style={inputStyle} />
+                  <button onClick={uploadPlan} disabled={planBusy} style={{ padding: "10px", background: "#000", color: "#fff", border: "none", borderRadius: 6, cursor: "pointer", fontFamily: FONT, fontSize: 13, opacity: planBusy ? 0.6 : 1 }}>{planBusy ? "Uploading…" : "+ Add plan"}</button>
+                </div>
+              </div>
             </div>
 
             <div style={{ padding: "18px 26px", borderTop: `1px solid ${BORDER}`, display: "flex", gap: 10 }}>
