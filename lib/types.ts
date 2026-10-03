@@ -1,4 +1,4 @@
-export type PlanType = "two" | "three";
+export type PlanType = "studio" | "two" | "three";
 
 /** A home TYPE you choose (not a per-floor unit). Price is per m². */
 export interface Apartment {

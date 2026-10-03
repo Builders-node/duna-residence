@@ -86,7 +86,7 @@ export default async function Home() {
           </p>
         </div>
 
-        <div className="grid md:grid-cols-2" style={{ gap: "24rem" }}>
+        <div className="grid md:grid-cols-3" style={{ gap: "24rem" }}>
           {types.map((t, i) => {
             const plans = plansByApt[t.id] ?? [];
             const cover = plans[0]?.url;

@@ -11,8 +11,9 @@ type PlanLite = { url: string; label: string };
 type TypeWithPlans = Apartment & { plans?: PlanLite[] };
 
 const IMG: Record<string, string> = {
-  "two-bed": "/images/living.png",
-  "three-bed": "/images/terrace.png",
+  studio: "/images/living.png",
+  "two-bed": "/images/terrace.png",
+  "three-bed": "/images/tower-exterior.png",
 };
 
 // warm terracotta panels derived from the accent, varied per row

@@ -9,6 +9,22 @@ export const BUILDING = {
 /** Home types at Duna Torre 2. Choose a type — the price is simply per m². */
 export const TYPES: Apartment[] = [
   {
+    id: "studio",
+    name: "Studio",
+    planType: "studio",
+    rooms: 0,
+    area: 38.6,
+    livingArea: 28.0,
+    terrace: 11.0,
+    ceiling: 3.0,
+    orientation: "Sea-facing",
+    view: "Caribbean sunset",
+    pricePerM2: 2400,
+    available: 10,
+    blurb:
+      "A compact, light-filled studio with an open living space and a private sea-view balcony.",
+  },
+  {
     id: "two-bed",
     name: "2-Bedroom",
     planType: "two",
@@ -62,6 +78,8 @@ export const ROOM_LABEL: Record<number, string> = {
 
 export function planTypeLabel(t: PlanType): string {
   switch (t) {
+    case "studio":
+      return "Studio";
     case "two":
       return "2-bedroom";
     case "three":

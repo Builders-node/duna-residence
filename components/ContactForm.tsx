@@ -4,7 +4,7 @@ import { useState } from "react";
 import Image from "next/image";
 import type { SiteSettings } from "@/lib/site";
 
-const INTERESTS = ["2-Bedroom", "3-Bedroom", "Undecided"];
+const INTERESTS = ["Studio", "2-Bedroom", "3-Bedroom", "Undecided"];
 
 const telHref = (phone: string) => "tel:" + phone.replace(/[^0-9+]/g, "");
 
